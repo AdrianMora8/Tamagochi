@@ -4,7 +4,7 @@ public class Saludable implements EstadoMascota {
     
     
     @Override
-    public void alimentar(MascotaVirtual mascota, MascotaVirtualGUI gui) {
+    public void alimentar(PokemonVirtual mascota, PokemonGUI gui) {
         if (mascota.getNivelHambre() == 100) {
             gui.mostrarMensaje(mascota.getNombre() + " está completamente lleno y en perfecta salud.");
         } else {
@@ -15,7 +15,7 @@ public class Saludable implements EstadoMascota {
     }
 
     @Override
-    public void jugar(MascotaVirtual mascota, MascotaVirtualGUI gui) {
+    public void jugar(PokemonVirtual mascota, PokemonGUI gui) {
         if (mascota.getNivelEnergia() == 0) {
             gui.mostrarMensaje(mascota.getNombre() + " está demasiado cansado para continuar jugando.");
         } else {
@@ -26,7 +26,7 @@ public class Saludable implements EstadoMascota {
     }
 
     @Override
-    public void dormir(MascotaVirtual mascota, MascotaVirtualGUI gui) {
+    public void dormir(PokemonVirtual mascota, PokemonGUI gui) {
         if (mascota.getNivelEnergia() == 100) {
             gui.mostrarMensaje(mascota.getNombre() + " está completamente descansado y no necesita más sueño.");
         } else {
@@ -37,18 +37,18 @@ public class Saludable implements EstadoMascota {
     }
 
     @Override
-    public void curar(MascotaVirtual mascota, MascotaVirtualGUI gui) {
+    public void curar(PokemonVirtual mascota, PokemonGUI gui) {
         if (mascota.getNivelSalud() == 100) {
             gui.mostrarMensaje(mascota.getNombre() + " está en plena forma y no necesita curación.");
         } else {
             gui.mostrarMensaje(mascota.getNombre() + " aprovecha su buen estado de salud para recuperarse rápidamente.");
-            mascota.setNivelEnfermedad(0); // Asumimos que saludable implica la capacidad de recuperarse completamente.
+            mascota.setNivelSalud(0); // Asumimos que saludable implica la capacidad de recuperarse completamente.
             gui.actualizarEstadoMascota();
         }
     }
 
     @Override
-    public void limpiar(MascotaVirtual mascota, MascotaVirtualGUI gui) {
+    public void limpiar(PokemonVirtual mascota, PokemonGUI gui) {
         if (mascota.getNivelLimpieza() == 100) {
             gui.mostrarMensaje(mascota.getNombre() + " ya está impecable y no necesita limpieza.");
         } else {

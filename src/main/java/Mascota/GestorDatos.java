@@ -15,7 +15,7 @@ public class GestorDatos {
         return PATH +  pokemon.toLowerCase() + ".txt";
     }
     
-    public static void guardarDatos(MascotaVirtual mascota, String pokemon) {
+    public static void guardarDatos(PokemonVirtual mascota, String pokemon) {
         String nombreArchivo = getNombreArchivo(pokemon);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(nombreArchivo))) {
             writer.write(mascota.getNombre() + "," +
@@ -32,7 +32,7 @@ public class GestorDatos {
         }
     }
     
-    public static MascotaVirtual cargarDatos(String pokemon) throws IOException {
+    public static PokemonVirtual cargarDatos(String pokemon) throws IOException {
         String nombreArchivo = getNombreArchivo(pokemon);
         File file = new File(nombreArchivo);
         if (!file.exists()) {
@@ -43,12 +43,12 @@ public class GestorDatos {
             String line = reader.readLine();
             if (line != null) {
                 String[] data = line.split(",");
-                MascotaVirtual mascota = new MascotaVirtual(data[0]);  // Asume que el nombre es el primer dato
+                PokemonVirtual mascota = new PokemonVirtual(data[0]);  // Asume que el nombre es el primer dato
                 mascota.setNivelFelicidad(Integer.parseInt(data[1]));
                 mascota.setNivelHambre(Integer.parseInt(data[2]));
                 mascota.setNivelEnergia(Integer.parseInt(data[3]));
                 mascota.setNivelLimpieza(Integer.parseInt(data[4]));
-                mascota.setNivelEnfermedad(Integer.parseInt(data[5]));
+                mascota.setNivelSalud(Integer.parseInt(data[5]));
                 mascota.setTiempoJuego(Integer.parseInt(data[6]));
                 return mascota;
             }

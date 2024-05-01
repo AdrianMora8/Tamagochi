@@ -2,7 +2,7 @@ package Mascota;
 
 public class Enfermo implements EstadoMascota {
     @Override
-    public void alimentar(MascotaVirtual mascota, MascotaVirtualGUI gui) {
+    public void alimentar(PokemonVirtual mascota, PokemonGUI gui) {
         if (mascota.getNivelHambre() == 100) {
             gui.mostrarMensaje(mascota.getNombre() + " no tiene apetito debido a la enfermedad, pero está saciado.");
         } else {
@@ -13,7 +13,7 @@ public class Enfermo implements EstadoMascota {
     }
 
     @Override
-    public void jugar(MascotaVirtual mascota, MascotaVirtualGUI gui) {
+    public void jugar(PokemonVirtual mascota, PokemonGUI gui) {
         if (mascota.getNivelEnergia() <= 10) {
             gui.mostrarMensaje(mascota.getNombre() + " está demasiado débil para jugar.");
         } else {
@@ -24,7 +24,7 @@ public class Enfermo implements EstadoMascota {
     }
 
     @Override
-    public void dormir(MascotaVirtual mascota, MascotaVirtualGUI gui) {
+    public void dormir(PokemonVirtual mascota, PokemonGUI gui) {
         if (mascota.getNivelEnergia() == 100) {
             gui.mostrarMensaje(mascota.getNombre() + " ya está completamente descansado pero sigue enfermo.");
         } else {
@@ -35,18 +35,18 @@ public class Enfermo implements EstadoMascota {
     }
 
     @Override
-    public void curar(MascotaVirtual mascota, MascotaVirtualGUI gui) {
+    public void curar(PokemonVirtual mascota, PokemonGUI gui) {
         if (mascota.getNivelSalud() >= 40 ) {
             gui.mostrarMensaje(mascota.getNombre() + " No necesita ser curado");
         } else {
             gui.mostrarMensaje(mascota.getNombre() + " mejora gradualmente su salud.");
-            mascota.setNivelEnfermedad(Math.max(0, mascota.getNivelSalud()+ 20));
+            mascota.setNivelSalud(Math.max(0, mascota.getNivelSalud()+ 20));
             gui.actualizarEstadoMascota();
         }
     }
 
     @Override
-    public void limpiar(MascotaVirtual mascota, MascotaVirtualGUI gui) {
+    public void limpiar(PokemonVirtual mascota, PokemonGUI gui) {
         if (mascota.getNivelLimpieza() == 100) {
             gui.mostrarMensaje(mascota.getNombre() + " ya está limpio y no necesita más cuidados.");
         } else {

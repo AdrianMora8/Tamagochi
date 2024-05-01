@@ -2,7 +2,7 @@ package Mascota;
 
 public class Energico implements EstadoMascota {
     @Override
-    public void alimentar(MascotaVirtual mascota, MascotaVirtualGUI gui) {
+    public void alimentar(PokemonVirtual mascota, PokemonGUI gui) {
         if (mascota.getNivelHambre() == 100) {
             gui.mostrarMensaje(mascota.getNombre() + " está completamente lleno y rebosante de energía!");
         } else {
@@ -13,7 +13,7 @@ public class Energico implements EstadoMascota {
     }
 
     @Override
-    public void jugar(MascotaVirtual mascota, MascotaVirtualGUI gui) {
+    public void jugar(PokemonVirtual mascota, PokemonGUI gui) {
         if (mascota.getNivelEnergia() <= 10) {
             gui.mostrarMensaje(mascota.getNombre() + " ha gastado casi toda su energía y necesita descansar.");
         } else {
@@ -24,7 +24,7 @@ public class Energico implements EstadoMascota {
     }
 
     @Override
-    public void dormir(MascotaVirtual mascota, MascotaVirtualGUI gui) {
+    public void dormir(PokemonVirtual mascota, PokemonGUI gui) {
         if (mascota.getNivelEnergia() == 100) {
             gui.mostrarMensaje(mascota.getNombre() + " está demasiado energico para dormir ahora.");
         } else {
@@ -35,18 +35,18 @@ public class Energico implements EstadoMascota {
     }
 
     @Override
-    public void curar(MascotaVirtual mascota, MascotaVirtualGUI gui) {
+    public void curar(PokemonVirtual mascota, PokemonGUI gui) {
         if (mascota.getNivelSalud() == 100 ) {
             gui.mostrarMensaje(mascota.getNombre() + " está en plena forma y no necesita ningún tipo de cura.");
         } else {
             gui.mostrarMensaje(mascota.getNombre() + " utiliza su energía para combatir la enfermedad más rápidamente.");
-            mascota.setNivelEnfermedad(Math.max(0, mascota.getNivelSalud() + 20));
+            mascota.setNivelSalud(Math.max(0, mascota.getNivelSalud() + 20));
             gui.actualizarEstadoMascota();
         }
     }
 
     @Override
-    public void limpiar(MascotaVirtual mascota, MascotaVirtualGUI gui) {
+    public void limpiar(PokemonVirtual mascota, PokemonGUI gui) {
         if (mascota.getNivelLimpieza() == 100) {
             gui.mostrarMensaje(mascota.getNombre() + " ya está completamente limpio y no para de moverse.");
         } else {

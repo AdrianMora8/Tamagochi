@@ -2,7 +2,7 @@ package Mascota;
 
 public class Cansado implements EstadoMascota {
     @Override
-    public void alimentar(MascotaVirtual mascota, MascotaVirtualGUI gui) {
+    public void alimentar(PokemonVirtual mascota, PokemonGUI gui) {
         if (mascota.getNivelHambre() == 100) {
             gui.mostrarMensaje(mascota.getNombre() + " Ya no tiene hambre ");
             mascota.verificarLimites();
@@ -15,7 +15,7 @@ public class Cansado implements EstadoMascota {
     }
 
     @Override
-    public void jugar(MascotaVirtual mascota, MascotaVirtualGUI gui) {
+    public void jugar(PokemonVirtual mascota, PokemonGUI gui) {
         
         if (mascota.getNivelEnergia() == 0) {
             gui.mostrarMensaje(mascota.getNombre() + " se quedo sin energias para jugar");
@@ -30,7 +30,7 @@ public class Cansado implements EstadoMascota {
     }
 
     @Override
-    public void dormir(MascotaVirtual mascota, MascotaVirtualGUI gui) {
+    public void dormir(PokemonVirtual mascota, PokemonGUI gui) {
         
         if (mascota.getNivelEnergia() == 100) {
             gui.mostrarMensaje(mascota.getNombre() + "No necesita dormir aun");
@@ -44,9 +44,9 @@ public class Cansado implements EstadoMascota {
     }
 
     @Override
-    public void curar(MascotaVirtual mascota, MascotaVirtualGUI gui) {
+    public void curar(PokemonVirtual mascota, PokemonGUI gui) {
         if (mascota.getNivelSalud()<= 40 ) {
-            mascota.setNivelEnfermedad(100);
+            mascota.setNivelSalud(100);
                 gui.mostrarMensaje(mascota.getNombre() + " Ha sido curado");
                     gui.actualizarEstadoMascota();
                     mascota.verificarLimites();
@@ -57,7 +57,7 @@ public class Cansado implements EstadoMascota {
     }
 
     @Override
-    public void limpiar(MascotaVirtual mascota, MascotaVirtualGUI gui) {
+    public void limpiar(PokemonVirtual mascota, PokemonGUI gui) {
         if (mascota.getNivelLimpieza() <= 40) {
         gui.mostrarMensaje(mascota.getNombre() + " se limpia sin mucha energía.");
             mascota.setNivelLimpieza(100); // Completamente limpio.

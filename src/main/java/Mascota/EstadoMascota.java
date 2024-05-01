@@ -1,10 +1,11 @@
 package Mascota;
 
 public interface EstadoMascota {
-    void alimentar(MascotaVirtual mascota, MascotaVirtualGUI gui);
-    void jugar(MascotaVirtual mascota, MascotaVirtualGUI gui);
-    void dormir(MascotaVirtual mascota, MascotaVirtualGUI gui);
-    void curar(MascotaVirtual mascota, MascotaVirtualGUI gui);
-    void limpiar(MascotaVirtual mascota, MascotaVirtualGUI gui);
+    void alimentar(PokemonVirtual mascota, PokemonGUI gui);
+    void jugar(PokemonVirtual mascota, PokemonGUI gui);
+    void dormir(PokemonVirtual mascota, PokemonGUI gui);
+    void curar(PokemonVirtual mascota, PokemonGUI gui);
+    void limpiar(PokemonVirtual mascota, PokemonGUI gui);
+    
 }
 

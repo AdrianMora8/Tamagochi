@@ -2,7 +2,7 @@ package Mascota;
 
 public class Triste implements EstadoMascota {
     @Override
-    public void alimentar(MascotaVirtual mascota, MascotaVirtualGUI gui) {
+    public void alimentar(PokemonVirtual mascota, PokemonGUI gui) {
         if (mascota.getNivelHambre() == 100) {
             gui.mostrarMensaje(mascota.getNombre() + " no tiene apetito, pero ya está saciado.");
         } else {
@@ -13,7 +13,7 @@ public class Triste implements EstadoMascota {
     }
 
     @Override
-    public void jugar(MascotaVirtual mascota, MascotaVirtualGUI gui) {
+    public void jugar(PokemonVirtual mascota, PokemonGUI gui) {
         if (mascota.getNivelEnergia() <= 10) {
             gui.mostrarMensaje(mascota.getNombre() + " está demasiado desanimado y cansado para jugar.");
         } else {
@@ -24,7 +24,7 @@ public class Triste implements EstadoMascota {
     }
 
     @Override
-    public void dormir(MascotaVirtual mascota, MascotaVirtualGUI gui) {
+    public void dormir(PokemonVirtual mascota, PokemonGUI gui) {
         if (mascota.getNivelEnergia() == 100) {
             gui.mostrarMensaje(mascota.getNombre() + " ya está descansado, pero aún parece triste.");
         } else {
@@ -35,18 +35,18 @@ public class Triste implements EstadoMascota {
     }
 
     @Override
-    public void curar(MascotaVirtual mascota, MascotaVirtualGUI gui) {
+    public void curar(PokemonVirtual mascota, PokemonGUI gui) {
         if (mascota.getNivelSalud() == 100) {
             gui.mostrarMensaje(mascota.getNombre() + " no está enfermo, solo triste.");
         } else {
             gui.mostrarMensaje(mascota.getNombre() + " mejora lentamente su salud, a pesar de la tristeza.");
-            mascota.setNivelEnfermedad(100);
+            mascota.setNivelSalud(100);
             gui.actualizarEstadoMascota();
         }
     }
 
     @Override
-    public void limpiar(MascotaVirtual mascota, MascotaVirtualGUI gui) {
+    public void limpiar(PokemonVirtual mascota, PokemonGUI gui) {
         if (mascota.getNivelLimpieza() == 100) {
             gui.mostrarMensaje(mascota.getNombre() + " no necesita limpieza.");
         } else {

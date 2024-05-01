@@ -14,15 +14,14 @@ import javax.swing.Timer;
 import java.util.Random;
 import javax.swing.ImageIcon;
 import java.awt.*;
-import java.util.Map;
-import java.util.HashMap;
 
 
 
 
-public class MascotaVirtualGUI extends JFrame{
-    private MascotaVirtual mascota;// Etiqueta para mostrar el GIF
-    private Map<String, ImageIcon> gifs;  // Mapa para guardar los 
+
+public class PokemonGUI extends JFrame{
+    private PokemonVirtual mascota;
+    private GestorGifs gestorGifs; 
     private int tiempoJuego=0;
     private Timer gifTimer;
 
@@ -33,14 +32,14 @@ public class MascotaVirtualGUI extends JFrame{
             lblNivelHambre, 
             lblNivelFelicidad, 
             lblNivelLimpieza, 
-            lblNivelEnfermedad,
+            lblNivelSalud,
             lblNombre,
             lblGif;
     
     
-    public MascotaVirtualGUI(MascotaVirtual mascota) {
+    public PokemonGUI(PokemonVirtual mascota) {
         this.mascota = mascota;
-        this.gifs=cargaGifs();
+        this.gestorGifs = new GestorGifs(mascota.getNombre());
         iniciarGUI(); 
         reloj();
     }
@@ -61,7 +60,7 @@ public class MascotaVirtualGUI extends JFrame{
         lblNivelHambre = new JLabel("Hambre: " + mascota.getNivelHambre());
         lblNivelFelicidad = new JLabel("Felicidad: " + mascota.getNivelFelicidad());
         lblNivelLimpieza = new JLabel("Limpieza: " + mascota.getNivelLimpieza());
-        lblNivelEnfermedad = new JLabel("Salud: " + mascota.getNivelSalud());
+        lblNivelSalud = new JLabel("Salud: " + mascota.getNivelSalud());
         lblHoraActual = new JLabel("Hora Actual: --:--:--");
         lblTiempoJuego = new JLabel("Tiempo de Juego: 0 dias");
         lblEstado = new JLabel("Estado: " + mascota.getEstado().getClass().getSimpleName());
@@ -72,7 +71,7 @@ public class MascotaVirtualGUI extends JFrame{
         pnlAtributos.add(lblNivelHambre);
         pnlAtributos.add(lblNivelFelicidad);
         pnlAtributos.add(lblNivelLimpieza);
-        pnlAtributos.add(lblNivelEnfermedad);
+        pnlAtributos.add(lblNivelSalud);
         pnlAtributos.add(lblHoraActual);
         pnlAtributos.add(lblTiempoJuego);
         pnlAtributos.add(lblEstado);
@@ -123,53 +122,35 @@ public class MascotaVirtualGUI extends JFrame{
         add(lblGif, BorderLayout.CENTER);
         lblGif.setHorizontalAlignment(JLabel.CENTER);
         lblGif.setPreferredSize(new Dimension(500, 300));
-        updateGif(mascota.getNombre().toLowerCase());
+        updateGif(mascota.getNombre(), 0);
 
         setVisible(true);
     }
-        
-    private void updateGif(String key) {
-        updateGif(key, 0); // Llama al método sobrecargado con un retardo de 0 segundos
-    }
-        
-    private void updateGif(String key, int delay) {
-        
-        ImageIcon icon = gifs.get(key);
-        if (icon != null) {
-            lblGif.setIcon(icon);
-                if (delay > 0) {
-                    javax.swing.Timer timer = new javax.swing.Timer(delay, e -> updateGif(mascota.getNombre()));
-                    timer.setRepeats(false);
-                    timer.start();
-                    gifTimer.stop();  
-            
-        }
-    } 
-}
-    
-    private Map<String,ImageIcon> cargaGifs(){
-        Map<String, ImageIcon> gifs = new HashMap<>();
-        if (mascota.getNombre().equalsIgnoreCase("pikachu")) {
-            System.out.println("entro");
-        gifs.put("pikachu", new ImageIcon(getClass().getResource( "/pikachu/pikachu.gif")));
-        gifs.put("comer", new ImageIcon(getClass().getResource( "/pikachu/Pcomer.gif")));
-        gifs.put("jugar", new ImageIcon(getClass().getResource( "/pikachu/Pjugar.gif")));
-        gifs.put("dormir", new ImageIcon(getClass().getResource( "/pikachu/Pdormir.gif")));
-        gifs.put("curar", new ImageIcon(getClass().getResource( "/pikachu/Pcurar.gif")));
-        gifs.put("limpiar", new ImageIcon(getClass().getResource( "/pikachu/Plimpiar.gif")));
-        }else{
-            System.out.println("entro 2");
-        gifs.put("charmander", new ImageIcon(getClass().getResource( "/charmander/charmander.gif")));
-        gifs.put("comer", new ImageIcon(getClass().getResource( "/charmander/C-comer.gif")));
-        gifs.put("jugar", new ImageIcon(getClass().getResource( "/charmander/C-jugar.gif")));
-        gifs.put("dormir", new ImageIcon(getClass().getResource( "/charmander/C-dormir.gif")));
-        gifs.put("curar", new ImageIcon(getClass().getResource( "/charmander/C-curar.gif")));
-        gifs.put("limpiar", new ImageIcon(getClass().getResource( "/charmander/C-limpiar.gif")));
-        
-        }
-        return gifs;
-    }
 
+private void updateGif(String key, int delay) {
+    ImageIcon icon = gestorGifs.getGif(key);  // Asumiendo que gestorGifs maneja correctamente los GIFs
+    if (icon != null) {
+        lblGif.setIcon(icon);
+        if (delay > 0) {
+            if (gifTimer != null) {
+                gifTimer.stop();  // Detiene el temporizador anterior si existe
+            }
+            // Configura el temporizador para volver al GIF por defecto después de la demora
+            gifTimer = new Timer(delay, e -> {
+                ImageIcon defaultIcon = gestorGifs.getGif(mascota.getNombre());
+                if (defaultIcon != null) {
+                    lblGif.setIcon(defaultIcon);
+                } else {
+                    System.out.println("No se encontró el GIF por defecto para: " + mascota.getNombre());
+                }
+            });
+            gifTimer.setRepeats(false);
+            gifTimer.start();
+        }
+    }
+}
+
+    
         
     private void reloj() {
         Timer timer = new Timer(1000, e -> {
@@ -192,8 +173,8 @@ public class MascotaVirtualGUI extends JFrame{
     private void agregarBoton(JPanel panel, String label, ActionListener actionListener) {
         JButton boton = new JButton(label);
         boton.addActionListener(e -> {
-        actionListener.actionPerformed(e);  // Ejecutar la acción específica
-        updateGif(label.toLowerCase(), 7000); // Cambiar al GIF de la acción y volver después de 7 segundos
+        actionListener.actionPerformed(e);  
+        updateGif(label.toLowerCase(), 7000); 
         });
         panel.add(boton);
     }
@@ -202,19 +183,16 @@ public class MascotaVirtualGUI extends JFrame{
         JOptionPane.showMessageDialog(this, mensaje);
     }  
 
-   
-    
     public void actualizarEstadoMascota() {
         lblEstado.setText("Estado: " + mascota.getEstado().getClass().getSimpleName());
         lblTiempoJuego.setText("Tiempo de Juego: " + mascota.getTiempoJuego() + " dias");
         lblNivelEnergia.setText("Energía: " + mascota.getNivelEnergia());
         lblNivelHambre.setText("Hambre: " + mascota.getNivelHambre());
-        lblNivelEnfermedad.setText("Salud: " + mascota.getNivelSalud());
+        lblNivelSalud.setText("Salud: " + mascota.getNivelSalud());
         lblNivelFelicidad.setText("Felicidad: " + mascota.getNivelFelicidad());
-        lblNivelLimpieza.setText("Limpieza: " + mascota.getNivelLimpieza());
-        
+        lblNivelLimpieza.setText("Limpieza: " + mascota.getNivelLimpieza());  
     }
-
+    
     private void cambioEstado() {
         Random random = new Random();
             if (random.nextInt(100) < 25) {  // 25% probabilidad de cambiar de estado
@@ -222,7 +200,7 @@ public class MascotaVirtualGUI extends JFrame{
                 EstadoMascota nuevoEstado = estados[random.nextInt(estados.length)];
                 mascota.setEstado(nuevoEstado);
             if (nuevoEstado instanceof Enfermo) {
-                mascota.setNivelEnfermedad(49);
+                mascota.setNivelSalud(49);
                 actualizarEstadoMascota();
             }if (nuevoEstado instanceof  Energico) {
                 mascota.setNivelEnergia(100);
@@ -232,7 +210,7 @@ public class MascotaVirtualGUI extends JFrame{
         }
     }
         
-    public static void guardarDatos(MascotaVirtual mascota) {
+    public static void guardarDatos(PokemonVirtual mascota) {
         GestorDatos.guardarDatos(mascota, mascota.getNombre());
         }
     }

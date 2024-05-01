@@ -41,9 +41,9 @@ public class MenuInicial extends JFrame {
 
         if (pokemon != null) {
             try {
-                MascotaVirtual mascota = GestorDatos.cargarDatos(pokemon);
+                PokemonVirtual mascota = GestorDatos.cargarDatos(pokemon);
                 if (mascota != null) {
-                    MascotaVirtualGUI gui = new MascotaVirtualGUI(mascota);
+                    PokemonGUI gui = new PokemonGUI(mascota);
                     gui.setVisible(true);
                     this.dispose(); // Cierra la ventana de menú inicial
                 } else {
@@ -59,13 +59,13 @@ public class MenuInicial extends JFrame {
         Object[] options = {"Pikachu", "Charmander"};
         String pokemon = (String) JOptionPane.showInputDialog(this, "Seleccione el Pokémon para comenzar:", "Nuevo Juego",
                 JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
-
         if (pokemon != null) {
             iniciarNuevoJuego(pokemon);
         }
     }
+    
     private void iniciarNuevoJuego(String pokemon) {
-        MascotaVirtual mascota;
+        PokemonVirtual mascota;
         switch (pokemon) {
             case "Pikachu":
                 mascota = new Pikachu("Pikachu");
@@ -76,7 +76,7 @@ public class MenuInicial extends JFrame {
             default:
                 return;
         }
-        MascotaVirtualGUI gui = new MascotaVirtualGUI(mascota);
+        PokemonGUI gui = new PokemonGUI(mascota);
         gui.setVisible(true);
         this.dispose(); // Cierra la ventana de menú
     }

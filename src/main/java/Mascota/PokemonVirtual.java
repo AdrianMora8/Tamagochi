@@ -1,7 +1,7 @@
 
 package Mascota;
 
-public class MascotaVirtual {
+public class PokemonVirtual {
     private String nombre;
     private int nivelFelicidad;
     private int nivelHambre;
@@ -12,7 +12,7 @@ public class MascotaVirtual {
     private EstadoMascota estado; // Referencia al estado actual
         
 
-    public MascotaVirtual(String nombre) {
+    public PokemonVirtual(String nombre) {
         this.nombre = nombre;
         this.nivelFelicidad = 50; // Nivel de felicidad inicial
         this.nivelHambre = 50; // Nivel de hambre inicial
@@ -44,7 +44,7 @@ public class MascotaVirtual {
         this.nivelLimpieza = nivelLimpieza;
     }
 
-    public void setNivelEnfermedad(int nivelSalud) {
+    public void setNivelSalud(int nivelSalud) {
         this.nivelSalud = nivelSalud;
     }
 
@@ -89,29 +89,29 @@ public class MascotaVirtual {
         return tiempoJuego;
     }
     
-    public void alimentar(MascotaVirtualGUI gui) {
+    public void alimentar(PokemonGUI gui) {
         estado.alimentar(this, gui);
             verificarLimites();
     }
 
-    public void jugar(MascotaVirtualGUI gui) {
+    public void jugar(PokemonGUI gui) {
         estado.jugar(this, gui);
             verificarLimites();
         
     }
 
-    public void dormir(MascotaVirtualGUI gui) {
+    public void dormir(PokemonGUI gui) {
         estado.dormir(this, gui);
             verificarLimites();
         
     }
 
-    public void curar(MascotaVirtualGUI gui) {
+    public void curar(PokemonGUI gui) {
         estado.curar(this, gui);
         verificarLimites();
     }
 
-    public void limpiar(MascotaVirtualGUI gui) {
+    public void limpiar(PokemonGUI gui) {
         estado.limpiar(this, gui);
         verificarLimites();
  
@@ -119,10 +119,10 @@ public class MascotaVirtual {
 
     
         public void verificarLimites() {
-        nivelFelicidad = Math.min(Math.max(nivelFelicidad, 0), 100);  // Asegura que nivelFelicidad esté entre 0 y 100
-        nivelHambre = Math.min(Math.max(nivelHambre, 0), 100);        // Asegura que nivelHambre esté entre 0 y 100
-        nivelEnergia = Math.min(Math.max(nivelEnergia, 0), 100);      // Asegura que nivelEnergia esté entre 0 y 100
-        nivelLimpieza = Math.min(Math.max(nivelLimpieza, 0), 100);  // Asegura que nivelLimpieza esté entre 0 y 100
+        nivelFelicidad = Math.min(Math.max(nivelFelicidad, 0), 100); 
+        nivelHambre = Math.min(Math.max(nivelHambre, 0), 100);     
+        nivelEnergia = Math.min(Math.max(nivelEnergia, 0), 100);     
+        nivelLimpieza = Math.min(Math.max(nivelLimpieza, 0), 100);  
         nivelSalud = Math.min(Math.max(nivelSalud,0),100);
     }
     

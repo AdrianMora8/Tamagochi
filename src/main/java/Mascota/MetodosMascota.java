@@ -7,10 +7,10 @@ import javax.swing.UIManager;
 
 public class MetodosMascota {
  
-    private MascotaVirtualGUI gui;
+    private PokemonGUI gui;
 
 
-    public MetodosMascota(MascotaVirtualGUI gui,MascotaVirtual mascota) {
+    public MetodosMascota(PokemonGUI gui,PokemonVirtual mascota) {
         this.gui = gui;
     }
         public static void cargarEstilo() {
