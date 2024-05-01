@@ -1,246 +1,239 @@
 package Mascota;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.time.LocalDateTime;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionListener;
 import java.time.format.DateTimeFormatter;
-import java.io.File;
+import java.time.LocalDateTime;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.Timer;
+import java.util.Random;
+import javax.swing.ImageIcon;
+import java.awt.*;
+import java.util.Map;
+import java.util.HashMap;
 
-public class MascotaVirtualGUI extends JFrame {
-    private MascotaVirtual mascota;
-    private JTextArea estadoTextArea;
-    private MascotaAnimadaGUI mascotaAnimadaGUI;
-    private JLabel horaLabel;
-    private JLabel fechaJuegoLabel;
-    private JButton alimentarButton;
-    private JButton jugarButton;
-    private JButton dormirButton;
-    private JButton curarButton;
-    private JButton limpiarButton;
-    private JButton mostrarEstadoButton;
-    private JButton actualizarAtributosButton;
-    private JButton guardarDatosButton;
-    private JButton cargarDatosButton;
-    private int yearsPassedInGame;
 
+
+
+public class MascotaVirtualGUI extends JFrame{
+    private MascotaVirtual mascota;// Etiqueta para mostrar el GIF
+    private Map<String, ImageIcon> gifs;  // Mapa para guardar los 
+    private int tiempoJuego=0;
+    private Timer gifTimer;
+
+    private JLabel lblHoraActual, 
+            lblTiempoJuego, 
+            lblEstado, 
+            lblNivelEnergia, 
+            lblNivelHambre, 
+            lblNivelFelicidad, 
+            lblNivelLimpieza, 
+            lblNivelEnfermedad,
+            lblNombre,
+            lblGif;
+    
+    
     public MascotaVirtualGUI(MascotaVirtual mascota) {
         this.mascota = mascota;
-        this.yearsPassedInGame = 0;
-
-        cargarEstilo();
-
-        setTitle("Mi Mascota Virtual");
-        setSize(800, 500);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.gifs=cargaGifs();
+        iniciarGUI(); 
+        reloj();
+    }
+        
+        private void iniciarGUI() {
+        setTitle("Tamagotchi Pokémon");
+        setSize(700, 700);
         setLayout(new BorderLayout());
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        estadoTextArea = new JTextArea();
-        estadoTextArea.setEditable(false);
-        actualizarEstado();
+        JPanel pnlAtributos = new JPanel(new GridLayout(0, 1));
+        JPanel pnlAcciones = new JPanel(new GridLayout(1, 0));
+        JPanel pnlPrincipal = new JPanel(new BorderLayout());
+        
+        lblGif = new JLabel();  // Inicializa el JLabel para el GIF
+        lblNombre = new JLabel("Nombre: " + mascota.getNombre());
+        lblNivelEnergia = new JLabel("Energía: " + mascota.getNivelEnergia());
+        lblNivelHambre = new JLabel("Hambre: " + mascota.getNivelHambre());
+        lblNivelFelicidad = new JLabel("Felicidad: " + mascota.getNivelFelicidad());
+        lblNivelLimpieza = new JLabel("Limpieza: " + mascota.getNivelLimpieza());
+        lblNivelEnfermedad = new JLabel("Salud: " + mascota.getNivelSalud());
+        lblHoraActual = new JLabel("Hora Actual: --:--:--");
+        lblTiempoJuego = new JLabel("Tiempo de Juego: 0 dias");
+        lblEstado = new JLabel("Estado: " + mascota.getEstado().getClass().getSimpleName());
 
-        JScrollPane scrollPane = new JScrollPane(estadoTextArea);
-        horaLabel = new JLabel();
-        fechaJuegoLabel = new JLabel();
-        actualizarFechaJuego();
-        mascotaAnimadaGUI = new MascotaAnimadaGUI();
+        pnlPrincipal.add(lblGif);
+        pnlAtributos.add(lblNombre);
+        pnlAtributos.add(lblNivelEnergia);
+        pnlAtributos.add(lblNivelHambre);
+        pnlAtributos.add(lblNivelFelicidad);
+        pnlAtributos.add(lblNivelLimpieza);
+        pnlAtributos.add(lblNivelEnfermedad);
+        pnlAtributos.add(lblHoraActual);
+        pnlAtributos.add(lblTiempoJuego);
+        pnlAtributos.add(lblEstado);
 
-        Timer timer = new Timer(1000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                imprimirHoraActual();
-                if ((LocalDateTime.now().getSecond() % 20) == 0) {
-                    yearsPassedInGame++;
-                    actualizarFechaJuego();
-                }
+        agregarBoton(pnlAcciones, "Alimentar", e -> {
+            mascota.alimentar(this);
+            actualizarEstadoMascota();
+            if (mascota.getNivelHambre() < 100) {
+            updateGif("comer", 7000);
+        }
+        });
+        agregarBoton(pnlAcciones, "Jugar", e -> {
+            mascota.jugar(this);
+            actualizarEstadoMascota();  // Llamada al método de actualización
+            if (mascota.getNivelEnergia() > 0) {  // Suponiendo que 20 es el mínimo para jugar
+        updateGif("jugar", 7000);
+        }
+        });
+        agregarBoton(pnlAcciones, "Dormir", e -> {
+            mascota.dormir(this);
+            actualizarEstadoMascota();
+            if (mascota.getNivelEnergia() !=100) {
+            updateGif("dormir", 7000);
             }
         });
-        timer.start();
-
-        alimentarButton = new JButton("Alimentar");
-        alimentarButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                mascota.alimentar();
-                actualizarEstado();
+        agregarBoton(pnlAcciones, "Curar", e -> {
+            mascota.curar(this);
+            actualizarEstadoMascota();
+            if (mascota.getNivelSalud() <= 40) {
+            updateGif("curar", 7000); 
             }
         });
-
-        jugarButton = new JButton("Jugar");
-        jugarButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                mascota.jugar();
-                actualizarEstado();
-            }
-        });
-
-        dormirButton = new JButton("Dormir");
-        dormirButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                mascota.dormir();
-                actualizarEstado();
-            }
-        });
-
-        curarButton = new JButton("Curar");
-        curarButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                mascota.curar();
-                actualizarEstado();
-            }
-        });
-
-        limpiarButton = new JButton("Limpiar");
-        limpiarButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                mascota.limpiar();
-                actualizarEstado();
-            }
-        });
-
-        mostrarEstadoButton = new JButton("Mostrar Estado");
-        mostrarEstadoButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                mascota.mostrarEstado();
+        agregarBoton(pnlAcciones, "Limpiar", e -> {
+            mascota.limpiar(this);
+            actualizarEstadoMascota();
+            if (mascota.getNivelLimpieza() < 100) {
+                }else{
+                    updateGif("limpiar", 7000);
+                
             }
         });
 
-        actualizarAtributosButton = new JButton("Actualizar Atributos");
-        actualizarAtributosButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                actualizarAtributos();
-                actualizarEstado();
-            }
-        });
+        agregarBoton(pnlAcciones, "Guardar Datos", e -> guardarDatos(mascota));
+        
+        
+        add(pnlAtributos, BorderLayout.NORTH);
+        add(pnlAcciones, BorderLayout.SOUTH);
+        add(lblGif, BorderLayout.CENTER);
+        lblGif.setHorizontalAlignment(JLabel.CENTER);
+        lblGif.setPreferredSize(new Dimension(500, 300));
+        updateGif(mascota.getNombre().toLowerCase());
 
-        guardarDatosButton = new JButton("Guardar Datos");
-        guardarDatosButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                mascota.guardarDatos("datos_mascota.txt");
-            }
-        });
-
-        cargarDatosButton = new JButton("Cargar Datos");
-        cargarDatosButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                mascota.cargarDatos("datos_mascota.txt");
-                actualizarEstado();
-            }
-        });
-
-        JPanel buttonsPanel = new JPanel(new GridLayout(3, 4));
-        buttonsPanel.add(alimentarButton);
-        buttonsPanel.add(jugarButton);
-        buttonsPanel.add(dormirButton);
-        buttonsPanel.add(curarButton);
-        buttonsPanel.add(limpiarButton);
-        buttonsPanel.add(mostrarEstadoButton);
-        buttonsPanel.add(actualizarAtributosButton);
-        buttonsPanel.add(guardarDatosButton);
-        buttonsPanel.add(cargarDatosButton);
-
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollPane, mascotaAnimadaGUI);
-        splitPane.setResizeWeight(0.5);
-
-        add(splitPane, BorderLayout.CENTER);
-        add(horaLabel, BorderLayout.NORTH);
-        add(fechaJuegoLabel, BorderLayout.SOUTH);
-        add(buttonsPanel, BorderLayout.SOUTH);
+        setVisible(true);
     }
-
-    public void actualizarEstado() {
-        StringBuilder estado = new StringBuilder("Estado de la mascota:\n");
-        estado.append("Nombre: ").append(mascota.getNombre()).append("\n");
-        estado.append("Color: ").append(mascota.getColor()).append("\n");
-        estado.append("Nivel de felicidad: ").append(mascota.getNivelFelicidad()).append("\n");
-        estado.append("Nivel de hambre: ").append(mascota.getNivelHambre()).append("\n");
-        estado.append("Nivel de energía: ").append(mascota.getNivelEnergia()).append("\n");
-        estado.append("¿Está enfermo?: ").append(mascota.estaEnfermo()).append("\n");
-        estado.append("¿Está sucio?: ").append(mascota.estaSucio()).append("\n");
-        estado.append("Edad: ").append(mascota.getEdad()).append("\n");
-        estado.append("Estado de ánimo: ").append(mascota.getEstadoAnimo()).append("\n");
-
-        estadoTextArea.setText(estado.toString());
+        
+    private void updateGif(String key) {
+        updateGif(key, 0); // Llama al método sobrecargado con un retardo de 0 segundos
     }
-
-    private void imprimirHoraActual() {
-        LocalDateTime horaActual = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String horaFormateada = horaActual.format(formatter);
-        horaLabel.setText("Hora actual: " + horaFormateada);
-    }
-
-    private void actualizarFechaJuego() {
-        fechaJuegoLabel.setText("FechaJuego: " + yearsPassedInGame + " años");
-    }
-
-    private void actualizarAtributos() {
-        String nuevoValor;
-
-        nuevoValor = JOptionPane.showInputDialog("Nuevo nombre:");
-        if (nuevoValor != null) {
-            mascota.setNombre(nuevoValor);
+        
+    private void updateGif(String key, int delay) {
+        
+        ImageIcon icon = gifs.get(key);
+        if (icon != null) {
+            lblGif.setIcon(icon);
+                if (delay > 0) {
+                    javax.swing.Timer timer = new javax.swing.Timer(delay, e -> updateGif(mascota.getNombre()));
+                    timer.setRepeats(false);
+                    timer.start();
+                    gifTimer.stop();  
+            
         }
-
-        nuevoValor = JOptionPane.showInputDialog("Nuevo color:");
-        if (nuevoValor != null) {
-            mascota.setColor(nuevoValor);
-        }
-
-        nuevoValor = JOptionPane.showInputDialog("Nuevo nivel de felicidad:");
-        if (nuevoValor != null) {
-            mascota.setNivelFelicidad(Integer.parseInt(nuevoValor));
-        }
-
-        nuevoValor = JOptionPane.showInputDialog("Nuevo nivel de hambre:");
-        if (nuevoValor != null) {
-            mascota.setNivelHambre(Integer.parseInt(nuevoValor));
-        }
-
-        nuevoValor = JOptionPane.showInputDialog("Nuevo nivel de energía:");
-        if (nuevoValor != null) {
-            mascota.setNivelEnergia(Integer.parseInt(nuevoValor));
-        }
-
-        nuevoValor = JOptionPane.showInputDialog("¿Está enfermo? (true/false):");
-        if (nuevoValor != null) {
-            mascota.setEstaEnfermo(Boolean.parseBoolean(nuevoValor));
-        }
-
-        nuevoValor = JOptionPane.showInputDialog("¿Está sucio? (true/false):");
-        if (nuevoValor != null) {
-            mascota.setEstaSucio(Boolean.parseBoolean(nuevoValor));
-        }
-
-        nuevoValor = JOptionPane.showInputDialog("Nueva edad:");
-        if (nuevoValor != null) {
-            mascota.setEdad(Integer.parseInt(nuevoValor));
-        }
-
-        nuevoValor = JOptionPane.showInputDialog("Nuevo estado de ánimo:");
-        if (nuevoValor != null) {
-            mascota.setEstadoAnimo(nuevoValor);
-        }
-
-        actualizarEstado();
-    }
-
-    private void cargarEstilo() {
-        try {
-            // Establecer el LookAndFeel de Nimbus
-            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-            // Actualizar la apariencia de los componentes
-            UIManager.put("TextArea.border", BorderFactory.createEmptyBorder(10, 10, 10, 10));
-            UIManager.put("Button.font", new Font("Arial", Font.PLAIN, 16));
-            UIManager.put("Label.font", new Font("Arial", Font.BOLD, 18));
-            UIManager.put("TextArea.font", new Font("Arial", Font.PLAIN, 14));
-            UIManager.put("Button.background", new Color(76, 175, 80));
-            UIManager.put("Button.foreground", Color.BLACK);
-            UIManager.put("Button.border", BorderFactory.createEmptyBorder(15, 20, 15, 20));
-            UIManager.put("Button.hoverBackground", new Color(69, 160, 73));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    
+    } 
 }
+    
+    private Map<String,ImageIcon> cargaGifs(){
+        Map<String, ImageIcon> gifs = new HashMap<>();
+        if (mascota.getNombre().equalsIgnoreCase("pikachu")) {
+            System.out.println("entro");
+        gifs.put("pikachu", new ImageIcon(getClass().getResource( "/pikachu/pikachu.gif")));
+        gifs.put("comer", new ImageIcon(getClass().getResource( "/pikachu/Pcomer.gif")));
+        gifs.put("jugar", new ImageIcon(getClass().getResource( "/pikachu/Pjugar.gif")));
+        gifs.put("dormir", new ImageIcon(getClass().getResource( "/pikachu/Pdormir.gif")));
+        gifs.put("curar", new ImageIcon(getClass().getResource( "/pikachu/Pcurar.gif")));
+        gifs.put("limpiar", new ImageIcon(getClass().getResource( "/pikachu/Plimpiar.gif")));
+        }else{
+            System.out.println("entro 2");
+        gifs.put("charmander", new ImageIcon(getClass().getResource( "/charmander/charmander.gif")));
+        gifs.put("comer", new ImageIcon(getClass().getResource( "/charmander/C-comer.gif")));
+        gifs.put("jugar", new ImageIcon(getClass().getResource( "/charmander/C-jugar.gif")));
+        gifs.put("dormir", new ImageIcon(getClass().getResource( "/charmander/C-dormir.gif")));
+        gifs.put("curar", new ImageIcon(getClass().getResource( "/charmander/C-curar.gif")));
+        gifs.put("limpiar", new ImageIcon(getClass().getResource( "/charmander/C-limpiar.gif")));
+        
+        }
+        return gifs;
+    }
+
+        
+    private void reloj() {
+        Timer timer = new Timer(1000, e -> {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        lblHoraActual.setText("Hora actual: " + now.format(formatter));
+
+        // Incrementar el tiempo del juego cada 3 minutos
+        if (now.getMinute()% 3 == 0 && now.getSecond() == 0) {
+            tiempoJuego++;
+            if (mascota.getTiempoJuego() % 1 == 0) {  // Cada dia
+                cambioEstado();
+            }
+        }
+            lblTiempoJuego.setText("Tiempo de Juego: " + tiempoJuego + " dias");
+                });
+            timer.start();
+        }
+        
+    private void agregarBoton(JPanel panel, String label, ActionListener actionListener) {
+        JButton boton = new JButton(label);
+        boton.addActionListener(e -> {
+        actionListener.actionPerformed(e);  // Ejecutar la acción específica
+        updateGif(label.toLowerCase(), 7000); // Cambiar al GIF de la acción y volver después de 7 segundos
+        });
+        panel.add(boton);
+    }
+    
+    public void mostrarMensaje(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje);
+    }  
+
+   
+    
+    public void actualizarEstadoMascota() {
+        lblEstado.setText("Estado: " + mascota.getEstado().getClass().getSimpleName());
+        lblTiempoJuego.setText("Tiempo de Juego: " + mascota.getTiempoJuego() + " dias");
+        lblNivelEnergia.setText("Energía: " + mascota.getNivelEnergia());
+        lblNivelHambre.setText("Hambre: " + mascota.getNivelHambre());
+        lblNivelEnfermedad.setText("Salud: " + mascota.getNivelSalud());
+        lblNivelFelicidad.setText("Felicidad: " + mascota.getNivelFelicidad());
+        lblNivelLimpieza.setText("Limpieza: " + mascota.getNivelLimpieza());
+        
+    }
+
+    private void cambioEstado() {
+        Random random = new Random();
+            if (random.nextInt(100) < 25) {  // 25% probabilidad de cambiar de estado
+                EstadoMascota[] estados = {new Saludable(), new Cansado(), new Energico(), new Enfermo(), new Feliz(), new Triste()};
+                EstadoMascota nuevoEstado = estados[random.nextInt(estados.length)];
+                mascota.setEstado(nuevoEstado);
+            if (nuevoEstado instanceof Enfermo) {
+                mascota.setNivelEnfermedad(49);
+                actualizarEstadoMascota();
+            }if (nuevoEstado instanceof  Energico) {
+                mascota.setNivelEnergia(100);
+            }       
+        actualizarEstadoMascota();
+        JOptionPane.showMessageDialog(this, "El estado de " + mascota.getNombre() + " ha cambiado a " + nuevoEstado.getClass().getSimpleName());
+        }
+    }
+        
+    public static void guardarDatos(MascotaVirtual mascota) {
+        GestorDatos.guardarDatos(mascota, mascota.getNombre());
+        }
+    }
+

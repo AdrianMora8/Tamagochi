@@ -1,17 +1,14 @@
 package Mascota;
 
 
-import javax.swing.*;
+import java.awt.EventQueue;
 
 public class Main {
-     public static void main(String[] args) {
-        // Crear una instancia de la mascota virtual
-        MascotaVirtual miMascota = new MascotaVirtual("Fido", "Marrón");
+ public static void main(String[] args) {
 
-        // Crear e inicializar la interfaz gráfica
-        SwingUtilities.invokeLater(() -> {
-            MascotaVirtualGUI gui = new MascotaVirtualGUI(miMascota);
-            gui.setVisible(true);
-        });
-    }
+     EventQueue.invokeLater(() -> {
+        new MenuInicial().setVisible(true);
+    });
+
+}
 }
