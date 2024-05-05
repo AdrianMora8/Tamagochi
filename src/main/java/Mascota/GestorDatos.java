@@ -9,12 +9,12 @@ import java.io.IOException;
 
 public class GestorDatos {
 
-    private static final String PATH = "C:\\Users\\adrian\\Documents\\GitHub\\";  // Ajusta la ruta según necesidad
+    private static final String PATH = "src/";  
 
     public static String getNombreArchivo(String pokemon) {
-        return PATH +  pokemon.toLowerCase() + ".txt";
+        return PATH + pokemon.toLowerCase() + ".txt";
     }
-    
+
     public static void guardarDatos(PokemonVirtual mascota, String pokemon) {
         String nombreArchivo = getNombreArchivo(pokemon);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(nombreArchivo))) {
@@ -31,14 +31,14 @@ public class GestorDatos {
             System.err.println("Error al guardar datos: " + e.getMessage());
         }
     }
-    
+
     public static PokemonVirtual cargarDatos(String pokemon) throws IOException {
         String nombreArchivo = getNombreArchivo(pokemon);
         File file = new File(nombreArchivo);
         if (!file.exists()) {
             throw new IOException("Archivo no encontrado: " + nombreArchivo);
         }
-        
+
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line = reader.readLine();
             if (line != null) {
@@ -56,5 +56,3 @@ public class GestorDatos {
         return null;
     }
 }
-
-

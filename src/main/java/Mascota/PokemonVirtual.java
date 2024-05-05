@@ -6,21 +6,23 @@ public class PokemonVirtual {
     private int nivelFelicidad;
     private int nivelHambre;
     private int nivelEnergia;
-    private int nivelLimpieza; // Atributo para el nivel de limpieza
+    private int nivelLimpieza; 
     private int nivelSalud;
-    private int tiempoJuego; // Asegúrate de que esta variable está definida en tu clase.
-    private EstadoMascota estado; // Referencia al estado actual
+    private int tiempoJuego; 
+    private EstadoPokemon estado; 
+    
+
         
 
     public PokemonVirtual(String nombre) {
         this.nombre = nombre;
-        this.nivelFelicidad = 50; // Nivel de felicidad inicial
-        this.nivelHambre = 50; // Nivel de hambre inicial
-        this.nivelEnergia = 50; // Nivel de energía inicial
-        this.nivelLimpieza = 100; // Inicialización a un valor por defecto
-        this.nivelSalud = 30; // No está enfermo inicialmente
+        this.nivelFelicidad = 50; 
+        this.nivelHambre = 50; 
+        this.nivelEnergia = 50; 
+        this.nivelLimpieza = 100; 
+        this.nivelSalud = 50;
         this.tiempoJuego=0;
-        this.estado = new Cansado(); // Estado inicial
+        this.estado = new Saludable(); 
     }
 
     // Setters
@@ -52,7 +54,7 @@ public class PokemonVirtual {
         this.tiempoJuego = tiempoJuego;
     }
     
-    public void setEstado(EstadoMascota nuevoEstado) {
+    public void setEstado(EstadoPokemon nuevoEstado) {
         this.estado = nuevoEstado;
     }
 
@@ -81,13 +83,15 @@ public class PokemonVirtual {
         return nivelSalud;
     }
 
-    public EstadoMascota getEstado() {
+    public EstadoPokemon getEstado() {
         return estado;
     }
 
     public int getTiempoJuego() {
         return tiempoJuego;
     }
+     
+    
     
     public void alimentar(PokemonGUI gui) {
         estado.alimentar(this, gui);
@@ -126,7 +130,7 @@ public class PokemonVirtual {
         nivelSalud = Math.min(Math.max(nivelSalud,0),100);
     }
     
-        public void cambiarEstado(EstadoMascota nuevoEstado) {
+        public void cambiarEstado(EstadoPokemon nuevoEstado) {
         this.estado = nuevoEstado;
     }
     

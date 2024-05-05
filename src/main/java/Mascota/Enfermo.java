@@ -1,6 +1,6 @@
 package Mascota;
 
-public class Enfermo implements EstadoMascota {
+public class Enfermo implements EstadoPokemon {
     @Override
     public void alimentar(PokemonVirtual mascota, PokemonGUI gui) {
         if (mascota.getNivelHambre() == 100) {
@@ -40,7 +40,7 @@ public class Enfermo implements EstadoMascota {
             gui.mostrarMensaje(mascota.getNombre() + " No necesita ser curado");
         } else {
             gui.mostrarMensaje(mascota.getNombre() + " mejora gradualmente su salud.");
-            mascota.setNivelSalud(Math.max(0, mascota.getNivelSalud()+ 20));
+            mascota.setNivelSalud(Math.max(0, mascota.getNivelSalud()+ 25));
             gui.actualizarEstadoMascota();
         }
     }

@@ -4,14 +4,13 @@ Mascota\GestorGifs.class
 Mascota\Cansado.class
 Mascota\Energico.class
 Mascota\MenuInicial.class
+Mascota\EstiloUI.class
 Mascota\PokemonVirtual.class
 Mascota\Saludable.class
+Mascota\EstadoPokemon.class
 Mascota\Pikachu.class
 Mascota\Feliz.class
-Mascota\MetodosMascota.class
-Mascota\EstadoMascota.class
 Mascota\Enfermo.class
 Mascota\PokemonGUI.class
 Mascota\GestorDatos.class
-Mascota\Pokemon.class
 Mascota\Main.class

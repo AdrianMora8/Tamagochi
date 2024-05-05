@@ -1,6 +1,6 @@
 package Mascota;
 
-public class Feliz implements EstadoMascota {
+public class Feliz implements EstadoPokemon {
     @Override
     public void alimentar(PokemonVirtual mascota, PokemonGUI gui) {
         if (mascota.getNivelHambre() == 100) {

@@ -1,6 +1,6 @@
 package Mascota;
 
-public class Cansado implements EstadoMascota {
+public class Cansado implements EstadoPokemon {
     @Override
     public void alimentar(PokemonVirtual mascota, PokemonGUI gui) {
         if (mascota.getNivelHambre() == 100) {

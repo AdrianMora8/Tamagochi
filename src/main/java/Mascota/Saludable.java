@@ -1,6 +1,6 @@
 package Mascota;
 
-public class Saludable implements EstadoMascota {
+public class Saludable implements EstadoPokemon {
     
     
     @Override
@@ -42,7 +42,7 @@ public class Saludable implements EstadoMascota {
             gui.mostrarMensaje(mascota.getNombre() + " está en plena forma y no necesita curación.");
         } else {
             gui.mostrarMensaje(mascota.getNombre() + " aprovecha su buen estado de salud para recuperarse rápidamente.");
-            mascota.setNivelSalud(0); // Asumimos que saludable implica la capacidad de recuperarse completamente.
+            mascota.setNivelSalud(100); // Asumimos que saludable implica la capacidad de recuperarse completamente.
             gui.actualizarEstadoMascota();
         }
     }

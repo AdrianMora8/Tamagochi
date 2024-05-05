@@ -28,15 +28,15 @@ public class MenuInicial extends JFrame {
     }
     
     private void cargarDatos(ActionEvent e) {
-        String[] options = {"Pikachu", "Charmander"};
+        String[] opciones = {"Pikachu", "Charmander"};
         String pokemon = (String) JOptionPane.showInputDialog(
             this,
             "Seleccione el Pokémon cuyos datos desea cargar:",
             "Cargar Datos",
             JOptionPane.PLAIN_MESSAGE,
             null,
-            options,
-            options[0]
+            opciones,
+            opciones[0]
         );
 
         if (pokemon != null) {
@@ -56,9 +56,9 @@ public class MenuInicial extends JFrame {
     }
 
     private void mostrarOpcionesPokemon(ActionEvent e) {
-        Object[] options = {"Pikachu", "Charmander"};
+        Object[] opciones = {"Pikachu", "Charmander"};
         String pokemon = (String) JOptionPane.showInputDialog(this, "Seleccione el Pokémon para comenzar:", "Nuevo Juego",
-                JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+                JOptionPane.PLAIN_MESSAGE, null, opciones, opciones[0]);
         if (pokemon != null) {
             iniciarNuevoJuego(pokemon);
         }
@@ -80,7 +80,4 @@ public class MenuInicial extends JFrame {
         gui.setVisible(true);
         this.dispose(); // Cierra la ventana de menú
     }
-
-
-
 }
